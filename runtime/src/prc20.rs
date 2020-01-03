@@ -273,11 +273,28 @@ mod tests {
 		type Signature = MultiSignature;
 	}
 
-	pub type System = system::Module<TestRuntime>;
+	//pub type System = system::Module<TestRuntime>;
 	pub type PRC20Module = Module<TestRuntime>;
-
+	//type Balances = balances::Module<TestRuntime>;
 	pub struct ExtBuilder;
 
+	parameter_types! {
+		pub const ExistentialDeposit: u64 = 0;
+		pub const TransferFee: u64 = 0;
+		pub const CreationFee: u64 = 0;
+	}
+
+	impl balances::Trait for TestRuntime {
+		type Balance = u64;
+		type OnFreeBalanceZero = ();
+		type OnNewAccount = ();
+		type Event = ();
+		type TransferPayment = ();
+		type DustRemoval = ();
+		type ExistentialDeposit = ExistentialDeposit;
+		type TransferFee = TransferFee;
+		type CreationFee = CreationFee;
+	}
 
    impl ExtBuilder {
         pub fn build() -> sp_io::TestExternalities {
@@ -297,18 +314,18 @@ mod tests {
         }
     }
 
-//	#[test]
-//	fn it_works_for_default_value() {
-//		ExtBuilder::build().execute_with(|| {
+	#[test]
+	fn it_works_for_default_value() {
+		ExtBuilder::build().execute_with(|| {
 //			let master = AccountId::From(AccountKeyring::Alice);
-//			assert_eq!(PRC20Module::token_count(), 0)
-//
-//
-//			// // Just a dummy test for the dummy funtion `do_something`
-//			// // calling the `do_something` function with a value 42
-//			// assert_ok!(TemplateModule::do_something(Origin::signed(1), 42));
-//			// // asserting that the stored value is equal to what we stored
-//			// assert_eq!(TemplateModule::something(), Some(42));
-//		});
-//	}
+			assert_eq!(PRC20Module::token_count(), 0)
+
+
+			// // Just a dummy test for the dummy funtion `do_something`
+			// // calling the `do_something` function with a value 42
+			// assert_ok!(TemplateModule::do_something(Origin::signed(1), 42));
+			// // asserting that the stored value is equal to what we stored
+			// assert_eq!(TemplateModule::something(), Some(42));
+		});
+	}
 }
