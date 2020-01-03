@@ -13,7 +13,6 @@ use system::ensure_signed;
 use sp_runtime::traits::{Member,SimpleArithmetic, Zero, StaticLookup, One,CheckedAdd, CheckedSub, Verify,IdentifyAccount};
 
 use codec::{Codec, Encode, Decode};
-// use sp_core::{ed25519};
 
 use sp_io::misc::print_utf8;
 /// The module's configuration trait.
@@ -223,29 +222,30 @@ impl<T: Trait> Module<T> {
 #[cfg(test)]
 mod tests {
 	use super::*;
-	use crate::prc20;
-	use substrate_test_runtime::AccountKeyring;
+	//use crate::prc20;
+//this causes clear_on_drop error	use sp_keyring::AccountKeyring;
 	use frame_support::{impl_outer_origin, parameter_types, weights::Weight};
+	use sp_core::H256;
 	use sp_runtime::{
-		traits::{BlakeTwo256, IdentityLookup}, testing::Header, Perbill,
+		traits::{BlakeTwo256, IdentityLookup}, testing::Header, Perbill, MultiSignature,
 	};
 
 	impl_outer_origin! {
-		pub enum Origin for Test {}
+		pub enum Origin for Runtime {}
 	}
 
 	// For testing the module, we construct most of a mock runtime. This means
 	// first constructing a configuration type (`Test`) which `impl`s each of the
 	// configuration traits of modules we want to use.
 	#[derive(Clone, Eq, PartialEq)]
-	pub struct Test;
+	pub struct Runtime;
 	parameter_types! {
 		pub const BlockHashCount: u64 = 250;
 		pub const MaximumBlockWeight: Weight = 1024;
 		pub const MaximumBlockLength: u32 = 2 * 1024;
 		pub const AvailableBlockRatio: Perbill = Perbill::from_percent(75);
 	}
-	impl system::Trait for Test {
+	impl system::Trait for Runtime {
 		type Origin = Origin;
 		type Call = ();
 		type Index = u64;
@@ -261,44 +261,52 @@ mod tests {
 		type MaximumBlockLength = MaximumBlockLength;
 		type AvailableBlockRatio = AvailableBlockRatio;
 		type Version = ();
+		type ModuleToIndex = ();
 	}
-	impl Trait for Test {
+
+	impl Trait for Runtime {
 		type Event = ();
+		type TokenBalance = u128;
+		type TokenId = u128;
 		type Public = <MultiSignature as Verify>::Signer;
 		type Signature = MultiSignature;
 	}
-	pub type System = system::Module<Test>;
-	pub type PRC20Module = Module<Test>;
+
+	pub type System = system::Module<Runtime>;
+	pub type PRC20Module = Module<Runtime>;
 
 	pub struct ExtBuilder;
 
 
    impl ExtBuilder {
-        pub fn build() -> runtime_io::TestExternalities {
-            let mut storage = system::GenesisConfig::default()
-                .build_storage::<TestRuntime>()
-				.unwrap();
-				balances::GenesisConfig::<TestRuntime> {
+        pub fn build() -> sp_io::TestExternalities {
+			let mut t = system::GenesisConfig::default().build_storage::<Runtime>().unwrap();
+
+//			let mut storage = system::GenesisConfig::default()
+//                .build_storage::<Runtime>()
+//				.unwrap();
+
+				balances::GenesisConfig::<Runtime> {
 					balances: vec![],
 					vesting: vec![],
-				}.assimilate_storage(&mut storage).unwrap();
-
-            runtime_io::TestExternalities::from(storage)
+				}.assimilate_storage(&mut t).unwrap();
+			t.into()
+            //runtime_io::TestExternalities::from(storage)
         }
     }
 
-	#[test]
-	fn it_works_for_default_value() {
-		ExtBuilder::build().execute_with(|| {
-			let master = AccountId::from(substrate_test_runtime_client::AccountKeyring::Alice);
-			assert_eq!(PRC20Module::token_count(), 0)
-
-
-			// // Just a dummy test for the dummy funtion `do_something`
-			// // calling the `do_something` function with a value 42
-			// assert_ok!(TemplateModule::do_something(Origin::signed(1), 42));
-			// // asserting that the stored value is equal to what we stored
-			// assert_eq!(TemplateModule::something(), Some(42));
-		});
-	}
+//	#[test]
+//	fn it_works_for_default_value() {
+//		ExtBuilder::build().execute_with(|| {
+//			let master = AccountId::From(AccountKeyring::Alice);
+//			assert_eq!(PRC20Module::token_count(), 0)
+//
+//
+//			// // Just a dummy test for the dummy funtion `do_something`
+//			// // calling the `do_something` function with a value 42
+//			// assert_ok!(TemplateModule::do_something(Origin::signed(1), 42));
+//			// // asserting that the stored value is equal to what we stored
+//			// assert_eq!(TemplateModule::something(), Some(42));
+//		});
+//	}
 }

@@ -1,3 +1,6 @@
+# My Notes
+clone this repo inside your {SUBSTRATE_DIR}/bin. It is a copy of node-template
+
 # Substrate Node Template
 
 A new SRML-based Substrate node, ready for hacking.
