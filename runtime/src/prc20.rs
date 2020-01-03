@@ -222,7 +222,6 @@ impl<T: Trait> Module<T> {
 #[cfg(test)]
 mod tests {
 	use super::*;
-	//use crate::prc20;
 //this causes clear_on_drop error	use sp_keyring::AccountKeyring;
 	use frame_support::{impl_outer_origin, parameter_types, weights::Weight};
 	use sp_core::H256;
@@ -273,9 +272,7 @@ mod tests {
 		type Signature = MultiSignature;
 	}
 
-	//pub type System = system::Module<TestRuntime>;
 	pub type PRC20Module = Module<TestRuntime>;
-	//type Balances = balances::Module<TestRuntime>;
 	pub struct ExtBuilder;
 
 	parameter_types! {
