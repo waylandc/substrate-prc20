@@ -231,21 +231,21 @@ mod tests {
 	};
 
 	impl_outer_origin! {
-		pub enum Origin for Runtime {}
+		pub enum Origin for TestRuntime {}
 	}
 
 	// For testing the module, we construct most of a mock runtime. This means
 	// first constructing a configuration type (`Test`) which `impl`s each of the
 	// configuration traits of modules we want to use.
 	#[derive(Clone, Eq, PartialEq)]
-	pub struct Runtime;
+	pub struct TestRuntime;
 	parameter_types! {
 		pub const BlockHashCount: u64 = 250;
 		pub const MaximumBlockWeight: Weight = 1024;
 		pub const MaximumBlockLength: u32 = 2 * 1024;
 		pub const AvailableBlockRatio: Perbill = Perbill::from_percent(75);
 	}
-	impl system::Trait for Runtime {
+	impl system::Trait for TestRuntime {
 		type Origin = Origin;
 		type Call = ();
 		type Index = u64;
@@ -264,7 +264,7 @@ mod tests {
 		type ModuleToIndex = ();
 	}
 
-	impl Trait for Runtime {
+	impl Trait for TestRuntime {
 		type Event = ();
 		type TokenBalance = u128;
 		type TokenId = u128;
@@ -272,26 +272,27 @@ mod tests {
 		type Signature = MultiSignature;
 	}
 
-	pub type System = system::Module<Runtime>;
-	pub type PRC20Module = Module<Runtime>;
+	pub type System = system::Module<TestRuntime>;
+	pub type PRC20Module = Module<TestRuntime>;
 
 	pub struct ExtBuilder;
 
 
    impl ExtBuilder {
         pub fn build() -> sp_io::TestExternalities {
-			let mut t = system::GenesisConfig::default().build_storage::<Runtime>().unwrap();
+			let mut t = system::GenesisConfig::default().build_storage::<TestRuntime>().unwrap();
 
 //			let mut storage = system::GenesisConfig::default()
 //                .build_storage::<Runtime>()
 //				.unwrap();
 
-				balances::GenesisConfig::<Runtime> {
+				balances::GenesisConfig::<TestRuntime> {
 					balances: vec![],
 					vesting: vec![],
 				}.assimilate_storage(&mut t).unwrap();
 			t.into()
-            //runtime_io::TestExternalities::from(storage)
+            // WC not sure what araa was doing below so I copied t.into() from Acala
+			// runtime_io::TestExternalities::from(storage)
         }
     }
 
