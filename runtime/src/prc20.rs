@@ -285,9 +285,9 @@ mod tests {
 		type Balance = u64;
 		type OnFreeBalanceZero = ();
 		type OnNewAccount = ();
-		type Event = ();
 		type TransferPayment = ();
 		type DustRemoval = ();
+		type Event = ();
 		type ExistentialDeposit = ExistentialDeposit;
 		type TransferFee = TransferFee;
 		type CreationFee = CreationFee;
