@@ -226,6 +226,7 @@ mod tests {
 //this causes clear_on_drop error	use sp_keyring::AccountKeyring;
 	use frame_support::{impl_outer_origin, parameter_types, weights::Weight};
 	use sp_core::H256;
+	use sp_runtime::AccountId32;
 	use sp_runtime::{
 		traits::{BlakeTwo256, IdentityLookup}, testing::Header, Perbill, MultiSignature,
 	};
@@ -252,7 +253,7 @@ mod tests {
 		type BlockNumber = u64;
 		type Hash = H256;
 		type Hashing = BlakeTwo256;
-		type AccountId = u64;
+		type AccountId = AccountId32;
 		type Lookup = IdentityLookup<Self::AccountId>;
 		type Header = Header;
 		type Event = ();
