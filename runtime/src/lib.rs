@@ -63,8 +63,10 @@ pub type Hash = sp_core::H256;
 /// Digest item type.
 pub type DigestItem = generic::DigestItem<Hash>;
 
-/// Used for the module template in `./prc20.rs`
-mod prc20;
+/// Used for the module template in `./template.rs`
+mod template;
+
+mod prc20; 
 
 /// Opaque types. These are used by the CLI to instantiate machinery that don't need to know
 /// the specifics of the runtime. They can then be made to be agnostic over specific formats
@@ -92,8 +94,8 @@ pub mod opaque {
 
 /// This runtime version.
 pub const VERSION: RuntimeVersion = RuntimeVersion {
-	spec_name: create_runtime_str!("node-parrot"),
-	impl_name: create_runtime_str!("node-parrot"),
+	spec_name: create_runtime_str!("node-template"),
+	impl_name: create_runtime_str!("node-template"),
 	authoring_version: 1,
 	spec_version: 1,
 	impl_version: 1,
@@ -235,19 +237,17 @@ impl sudo::Trait for Runtime {
 	type Proposal = Call;
 }
 
-// Used for the module template in `./template.rs`
-//impl template::Trait for Runtime {
-//	type Event = Event;
-//}
+/// Used for the module template in `./template.rs`
+impl template::Trait for Runtime {
+	type Event = Event;
+}
 
 impl prc20::Trait for Runtime {
-	type Event = Event;
-	type TokenBalance = u128;
-	type TokenId = u128;
-	type Public = <MultiSignature as Verify>::Signer;
-	type Signature = MultiSignature;
-	// type SwapSignature = MultiSignature;
-	// type SwapSignedBy = Hash;
+	type Event = Event; 
+	type TokenBalance = u128; 
+	type TokenId = u128; 
+	// type Public = <MultiSignature as Verify>::Signer;
+	// type Signature = MultiSignature; 
 }
 
 construct_runtime!(
@@ -261,11 +261,11 @@ construct_runtime!(
 		Aura: aura::{Module, Config<T>, Inherent(Timestamp)},
 		Grandpa: grandpa::{Module, Call, Storage, Config, Event},
 		Indices: indices,
-		Balances: balances::{default, Error},
+		Balances: balances,
 		TransactionPayment: transaction_payment::{Module, Storage},
 		Sudo: sudo,
 		// Used for the module template in `./template.rs`
-//		TemplateModule: template::{Module, Call, Storage, Event<T>},
+		TemplateModule: template::{Module, Call, Storage, Event<T>},
 		RandomnessCollectiveFlip: randomness_collective_flip::{Module, Call, Storage},
 		PRC20Module: prc20::{Module, Call, Storage, Event<T>},
 	}
